@@ -1,6 +1,7 @@
 // A slice is a collection of Redux reducer logic and actions for a single feature.
 
 import { createSlice } from '@reduxjs/toolkit'
+import { nanoid } from '@reduxjs/toolkit'
 
 const initialState = [
   { id: '1', title: 'First Post!', content: 'Hello' },
@@ -16,14 +17,43 @@ const postsSlice = createSlice({
     // Redux Toolkit allows use to write "mutating" immutable logic in reducers.
     // It doesn't actual mutate the state because it use the immer library underneath,
     // which detects change to a "draft state" and  product a brand new immutable state.
-    postAdded(state, action) {
-      state.push(action.payload)
+
+    // Action: {type: 'posts/postAdded', payload:{id, title, content}}
+    // postAdded(state, action) {
+    //   state.push(action.payload)
+    // },
+
+    // The prepare callback function runs additional logic to customize the action payload.
+    postAdded: {
+      prepare(title, content) {
+        return {
+          payload: {
+            id: nanoid(),
+            title,
+            content
+          }
+        }
+      },
+      reducer(state, action) {
+        state.push(action.payload)
+      }
+    },
+
+    // Action: {type: 'posts/postUpdated', payload:{id, title, content}}
+    postUpdated(state, action) {
+      const { id, title, content } = action.payload
+      const existingPost = state.find((post) => post.id === id)
+      if (existingPost) {
+        existingPost.title = title
+        existingPost.content = content
+      }
     },
   },
+  
 })
 
 // Export a action creator of the same name as the reducer, and use it in UI to dispatch the action.
-export const { postAdded } = postsSlice.actions
+export const { postAdded, postUpdated } = postsSlice.actions
 
 // Export the reducer function to the Redux store.
 export default postsSlice.reducer

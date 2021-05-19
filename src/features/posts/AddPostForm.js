@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { nanoid } from '@reduxjs/toolkit'
+// import { nanoid } from '@reduxjs/toolkit'
 import { postAdded } from './postsSlice'
 
 export const AddPostForm = () => {
@@ -12,10 +12,22 @@ export const AddPostForm = () => {
 
   const onTitleChanged = (e) => setTitle(e.target.value)
   const onContentChanged = (e) => setContent(e.target.value)
+
+  // This is a hand-written action creator without using createSlice hook
+  // function postAdded(title, content) {
+  //   const id = nanoid()
+  //   return {
+  //     type: 'post/postAdded',
+  //     payload: { id, title, content },
+  //   }
+  // }
+
   const onSavePostClicked = () => {
     if (title && content) {
       // Function nanoid() from React Toolkit generates a random unique ID.
-      dispatch(postAdded({ id: nanoid(), title, content }))
+      // dispatch(postAdded({ id: nanoid(), title, content }))
+      // If we need to dispatch the same action from many components without duplicating the impure logic:
+      dispatch(postAdded(title, content))
       setTitle('')
       setContent('')
     }
@@ -25,7 +37,7 @@ export const AddPostForm = () => {
     <section>
       <h2>Add a New Post</h2>
       <form>
-        <label htmlFor="postTitle">Post Title:</label>
+        <label htmlFor="postTitle">Title:</label>
         <input
           type="text"
           id="postTitle"
