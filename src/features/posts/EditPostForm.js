@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { PostAuthor } from './PostAuthor'
 
 import { postUpdated } from './postsSlice'
 
@@ -39,6 +40,7 @@ export const EditPostForm = ({ match }) => {
           value={title}
           onChange={onTitleChanged}
         />
+        <PostAuthor userId={post.user}/>
         <label htmlFor="postContent">Content:</label>
         <textarea
           id="postContent"

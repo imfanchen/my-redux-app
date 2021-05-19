@@ -25,12 +25,13 @@ const postsSlice = createSlice({
 
     // The prepare callback function runs additional logic to customize the action payload.
     postAdded: {
-      prepare(title, content) {
+      prepare(title, content, userId) {
         return {
           payload: {
             id: nanoid(),
             title,
-            content
+            content,
+            user: userId
           }
         }
       },
