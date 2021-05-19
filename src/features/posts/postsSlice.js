@@ -2,10 +2,23 @@
 
 import { createSlice } from '@reduxjs/toolkit'
 import { nanoid } from '@reduxjs/toolkit'
+import { sub } from 'date-fns'
 
 const initialState = [
-  { id: '1', title: 'First Post!', content: 'Hello' },
-  { id: '2', title: 'Second Post', content: 'More text' },
+  {
+    id: '1',
+    date: sub(new Date(), { minutes: 20 }).toISOString(),
+    title: 'First Post!',
+    content: 'Hello',
+    user: '2',
+  },
+  {
+    id: '2',
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
+    title: 'Second Post?',
+    content: 'More text',
+    user: '2',
+  },
 ]
 
 const postsSlice = createSlice({
@@ -29,15 +42,16 @@ const postsSlice = createSlice({
         return {
           payload: {
             id: nanoid(),
+            date: new Date().toISOString(),
             title,
             content,
-            user: userId
-          }
+            user: userId,
+          },
         }
       },
       reducer(state, action) {
         state.push(action.payload)
-      }
+      },
     },
 
     // Action: {type: 'posts/postUpdated', payload:{id, title, content}}
@@ -49,12 +63,20 @@ const postsSlice = createSlice({
         existingPost.content = content
       }
     },
+
+    // Action: {type: 'posts/reactionAdded', payload:{id, reaction}}
+    reactionAdded(state, action) {
+      const { postId, reaction } = action.payload
+      const existingPost = state.find((post) => post.id === postId)
+      if (existingPost) {
+        existingPost.reactions[reaction]++
+      }
+    },
   },
-  
 })
 
 // Export a action creator of the same name as the reducer, and use it in UI to dispatch the action.
-export const { postAdded, postUpdated } = postsSlice.actions
+export const { postAdded, postUpdated, reactionAdded } = postsSlice.actions
 
 // Export the reducer function to the Redux store.
 export default postsSlice.reducer
