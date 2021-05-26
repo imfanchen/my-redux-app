@@ -4,17 +4,19 @@ import { Link } from 'react-router-dom'
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
 import { ReactionButtons } from './ReactionButtons'
+import { selectPostById } from './postsSlice'
 
 export const SinglePostPage = ({ match }) => {
   // React Router will pass in a match object containing the URL.
   // It will store the second part of the URL in match.params property.
   const { postId } = match.params
 
-  const post = useSelector((state) =>
-    // The component will re-render any time the value returned
-    // from the useSelector hook changes to a new reference.
-    state.posts.find((post) => post.id === postId)
-  )
+  // The component will re-render any time the value returned
+  // from the useSelector hook changes to a new reference.
+  // const post = useSelector((state) =>
+  //   state.posts.find((post) => post.id === postId)
+  // )
+  const post = useSelector((state) => selectPostById(state, postId))
 
   if (!post) {
     return (

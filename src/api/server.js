@@ -1,4 +1,4 @@
-// Provide a fake REST API for our data.
+// Provide a fake in-memory REST API for our data using Mirage.js.
 
 import {
   Server,
@@ -67,7 +67,7 @@ const notificationTemplates = [
 new Server({
   routes() {
     this.namespace = 'fakeApi'
-    //this.timing = 2000
+    this.timing = 2000 // manually delay loading for testing async callback
 
     this.resource('users')
     this.resource('posts')
